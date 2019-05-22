@@ -13,7 +13,8 @@ import zmq
 try:
     import picamera
 except ImportError:
-    raise ImportError("Picamera package not found, you must run this code on the Raspberry Pi")
+    raise ImportError(
+        "Picamera package not found, you must run this code on the Raspberry Pi")
 
 from robust_serial import write_order, Order
 from robust_serial.threads import CommandThread, ListenerThread
@@ -31,7 +32,8 @@ socket = context.socket(zmq.PAIR)
 socket.bind("tcp://*:{}".format(TELEOP_PORT))
 
 parser = argparse.ArgumentParser(description='Teleoperation server')
-parser.add_argument('-v', '--video_file', help='Video filename', default="", type=str)
+parser.add_argument('-v', '--video_file',
+                    help='Video filename', default="", type=str)
 args = parser.parse_args()
 
 record_video = args.video_file != ""
@@ -53,7 +55,7 @@ while not is_connected:
         time.sleep(2)
         continue
     byte = bytes_array[0]
-    if byte in [Order.HELLO.value, Order.ALREADY_CONNECTED.value]:
+    if byte in [Order.ALREADY_CONNECTED.value]:
         is_connected = True
 
 print("Connected to Arduino")
@@ -81,24 +83,24 @@ socket.send(b'1')
 print("Connected To Client")
 i = 0
 
-with picamera.PiCamera(resolution=CAMERA_RESOLUTION, sensor_mode=CAMERA_MODE, framerate=FPS) as camera:
-    if record_video:
-        camera.start_recording("{}.h264".format(args.video_file))
+# with picamera.PiCamera(resolution=CAMERA_RESOLUTION, sensor_mode=CAMERA_MODE, framerate=FPS) as camera:
+#     if record_video:
+#         camera.start_recording("{}.h264".format(args.video_file))
 
-    while True:
-        control_speed, angle_order = socket.recv_json()
-        print("({}, {})".format(control_speed, angle_order))
-        try:
-            command_queue.put_nowait((Order.MOTOR, control_speed))
-            command_queue.put_nowait((Order.SERVO, angle_order))
-        except fullException:
-            print("Queue full")
+#     while True:
+#         control_speed, angle_order = socket.recv_json()
+#         print("({}, {})".format(control_speed, angle_order))
+#         try:
+#             command_queue.put_nowait((Order.MOTOR, control_speed))
+#             command_queue.put_nowait((Order.SERVO, angle_order))
+#         except fullException:
+#             print("Queue full")
 
-        if control_speed == -999:
-            socket.close()
-            break
-    if record_video:
-        camera.stop_recording()
+#         if control_speed == -999:
+#             socket.close()
+#             break
+#     if record_video:
+#         camera.stop_recording()
 
 print("Sending STOP order...")
 # Stop the car at the end
