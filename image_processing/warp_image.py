@@ -31,6 +31,7 @@ new_height, new_width = int(height * 1) + ty + 600, int(width * 1.2) + tx
 transform_matrix = cv2.getPerspectiveTransform(pts1, pts2)
 complete_transform = np.dot(translation_matrix, transform_matrix)
 
+
 def imshow(im, name=""):  # pragma: no cover
     plt.figure(name)
     # BGR to RGB
@@ -67,16 +68,21 @@ def warpImage(image):
     # TODO: transform only points
     return cv2.warpPerspective(image, complete_transform, (new_width, new_height))
 
+
 if __name__ == '__main__':  # pragma: no cover
-    parser = argparse.ArgumentParser(description='Transform image to have a top down view')
-    parser.add_argument('-i', '--input_image', help='Input image', type=str, required=True)
-    parser.add_argument('--no-display', action='store_true', default=False, help='Do not display plots (for tests)')
+    parser = argparse.ArgumentParser(
+        description='Transform image to have a top down view')
+    parser.add_argument('-i', '--input_image',
+                        help='Input image', type=str, required=True)
+    parser.add_argument('--no-display', action='store_true',
+                        default=False, help='Do not display plots (for tests)')
     args = parser.parse_args()
 
     image = cv2.imread(args.input_image)
     assert image is not None, "Could not read image"
     orignal_image = image.copy()
-    warp = cv2.warpPerspective(orignal_image, np.dot(translation_matrix, transform_matrix), (new_width, new_height))
+    warp = cv2.warpPerspective(orignal_image, np.dot(
+        translation_matrix, transform_matrix), (new_width, new_height))
     if not args.no_display:
         imshow(image, name="original")
         showTransform(image)

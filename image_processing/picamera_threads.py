@@ -19,6 +19,8 @@ fullException = queue.Full
 
 experiment_time = int(time.time())
 
+import WifiCamera
+
 
 class ImageProcessingThread(threading.Thread):
     """
@@ -43,7 +45,8 @@ class ImageProcessingThread(threading.Thread):
             self.exit_condition.wait()
         v.stop()
 
-        print('FPS: {:.2f}'.format(v.analyser.frame_num / (time.time() - start_time)))
+        print('FPS: {:.2f}'.format(
+            v.analyser.frame_num / (time.time() - start_time)))
 
 
 class RGBAnalyser(picamera.array.PiRGBAnalysis):
@@ -60,7 +63,7 @@ class RGBAnalyser(picamera.array.PiRGBAnalysis):
         self.frame_num = 0
         self.frame_queue = queue.Queue(maxsize=1)
         self.exit = False
-        self.out_queue = out_queue
+        self.‘out_queue = out_queue
         self.debug = debug
         self.thread = None
         self.start()
@@ -91,9 +94,11 @@ class RGBAnalyser(picamera.array.PiRGBAnalysis):
                         # start_time = time.time()
                         turn_percent, centroids = processImage(frame)
                         # times.append(time.time() - start_time)
-                        self.out_queue.put(item=(turn_percent, centroids), block=False)
+                        self.out_queue.put(
+                            item=(turn_percent, centroids), block=False)
                     except Exception as e:
-                        print("Exception in RBGAnalyser processing image: {}".format(e))
+                        print(
+                            "Exception in RBGAnalyser processing image: {}".format(e))
                 self.frame_num += 1
         except Exception as e:
             print("Exception in RBGAnalyser after loop: {}".format(e))
@@ -134,7 +139,8 @@ class Viewer(object):
         print(self.camera.resolution)
 
     def start(self):
-        self.analyser = RGBAnalyser(self.camera, self.out_queue, debug=self.debug)
+        self.analyser = RGBAnalyser(
+            self.camera, self.out_queue, debug=self.debug)
         self.camera.start_recording(self.analyser, format='bgr')
         if RECORD_VIDEO:
             self.camera.start_recording('debug/{}.h264'.format(experiment_time),

@@ -69,7 +69,8 @@ def pygameMain():
 
     def updateScreen(window, speed, turn):
         clear()
-        writeText(window, 'Linear: {:.2f}, Angular: {:.2f}'.format(speed, turn), 20, 0, font, (255, 255, 255))
+        writeText(window, 'Linear: {:.2f}, Angular: {:.2f}'.format(
+            speed, turn), 20, 0, font, (255, 255, 255))
         help_str = 'Use arrow keys to move, q or ESCAPE to exit.'
         writeText(window, help_str, 20, 50, small_font)
         help_2 = 'space key, k : force stop ---  anything else : stop smoothly'
@@ -91,7 +92,8 @@ def pygameMain():
             x, theta = 0, 0
             control_speed, control_turn = 0, 0
 
-        control_speed, control_turn = control(x, theta, control_speed, control_turn)
+        control_speed, control_turn = control(
+            x, theta, control_speed, control_turn)
         # Send Orders
         angle_order = sendToServer(socket, control_speed, control_turn)
 

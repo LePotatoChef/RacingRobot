@@ -10,11 +10,11 @@ except ImportError:
     import Queue as queue
 
 import zmq
-try:
-    import picamera
-except ImportError:
-    raise ImportError(
-        "Picamera package not found, you must run this code on the Raspberry Pi")
+# try:
+#     import picamera
+# except ImportError:
+#     raise ImportError(
+#         "Picamera package not found, you must run this code on the Raspberry Pi")
 
 from robust_serial import write_order, Order
 from robust_serial.threads import CommandThread, ListenerThread
