@@ -1,29 +1,38 @@
 import cv2
+import numpy as np
 
 
 class camera(object):
+    def __init__():
+        self.cam_url = 'rtsp://192.168.0.11/stream1'
+        self.cap = cv2.VideoCapture(cam_url)
     def get_feed():
-        cam_url = 'rtsp://192.168.0.11/stream1'
-        cap = cv2.VideoCapture(cam_url)
-
-        if cap.isOpened():
-            rval, frame = cap.read()
+        # cam_url = 'rtsp://192.168.0.11/stream1'
+        # cap = cv2.VideoCapture(cam_url)
+        # check if cam is open
+        if self.cap.isOpened():
+            rval, frame = self.cap.read()
         else:
-            cap.open(cam_url)
+            self.cap.open(cam_url)
             rval = False
         # convert into numpy array
         shape = frame.shape
-        shared_array = mp.Array(
+        shared_array = np.Array(
             ctypes.c_uint16, shape[0] * shape[1] * shape[2], lock=False)
+        return frame
+        # while rval:
+        #     frame = cv2.resize(frame, (1920, 1080))  # resize the frame
+        #     rval, frame = cap.read()
+        #     key = cv2.waitKey(1)
+        #     if key == 27:  # exit on ESC
+        #         break
 
-        while rval:
-            frame = cv2.resize(frame, (1920, 1080))  # resize the frame
-            rval, frame = cap.read()
-            key = cv2.waitKey(1)
-            if key == 27:  # exit on ESC
-                break
+    def start_recording(self, output, format=None, resize=None, splitter_port=1, **options):
+        frame = self.get_feed()
+        output = frame
 
-    def start_recording():
+        # output = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
+        # output.write(frame)
 
         # if 'quantization' in options:
         #     warnings.warn(

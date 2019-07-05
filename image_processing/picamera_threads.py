@@ -63,7 +63,7 @@ class RGBAnalyser(picamera.array.PiRGBAnalysis):
         self.frame_num = 0
         self.frame_queue = queue.Queue(maxsize=1)
         self.exit = False
-        self.‘out_queue = out_queue
+        self.out_queue = out_queue
         self.debug = debug
         self.thread = None
         self.start()
@@ -127,13 +127,14 @@ class Viewer(object):
     """
 
     def __init__(self, out_queue, resolution, debug=False, fps=90):
-        self.camera = picamera.PiCamera(resolution=CAMERA_RESOLUTION, sensor_mode=CAMERA_MODE,
-                                        framerate=fps)
+        # self.camera = picamera.PiCamera(resolution=CAMERA_RESOLUTION, sensor_mode=CAMERA_MODE,
+        #                                 framerate=fps)
+        self.camera = WifiCamera.camera()
         self.out_queue = out_queue
         # self.camera.zoom = (0.0, 0.0, 1.0, 1.0)
         # self.camera.awb_gains = 1.5
-        self.camera.awb_mode = 'auto'
-        self.camera.exposure_mode = 'auto'
+        # self.camera.awb_mode = 'auto'
+        # self.camera.exposure_mode = 'auto'
         self.debug = debug
         self.analyser = None
         print(self.camera.resolution)
@@ -142,9 +143,9 @@ class Viewer(object):
         self.analyser = RGBAnalyser(
             self.camera, self.out_queue, debug=self.debug)
         self.camera.start_recording(self.analyser, format='bgr')
-        if RECORD_VIDEO:
-            self.camera.start_recording('debug/{}.h264'.format(experiment_time),
-                                        splitter_port=2, resize=CAMERA_RESOLUTION)
+        # if RECORD_VIDEO:
+        #     self.camera.start_recording('debug/{}.h264'.format(experiment_time),
+        #                                 splitter_port=2, resize=CAMERA_RESOLUTION)
 
     def stop(self):
         self.camera.wait_recording()
